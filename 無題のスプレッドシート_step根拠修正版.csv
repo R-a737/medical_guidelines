@@ -1,0 +1,88 @@
+﻿データ種別,データ詳細,取得元（参考）,取得方法,取得頻度,1回あたりのデータ量,単位,Step1,Step2,Step3,各Stepの値,1回あたりのデータ量の根拠,取得頻度の根拠,他社事例
+交通情報,渋滞・事故・通行止め等のリアルタイム交通情報,"HERE Traffic API
+https://www.here.com/platform/traffic-solutions/real-time-traffic-information
+TomTom Traffic API
+https://developer.tomtom.com/traffic-api/documentation/product-information/introduction",REST API（HERE: bbox / in=bbox、TomTom: bbox）,HERE Flow 1分 / HERE Incidents 2分 / TomTom 1分更新,0.2~0.5,KB,"12,004","12,004","1,285,403.6","Step1=東京23区の道路延長 12,004km（東京都建設局）
+Step2=東京23区の道路延長 12,004km（同左）
+Step3=全国道路総延長 1,285,403.6km（国交省 道路統計年報2024）
+https://www.kensetsu.metro.tokyo.lg.jp/road/kanri
+https://www.mlit.go.jp/road/soudan/soudan_10b_01.html","TomTom公式サンプルのJSON例の文字列長ベース近似。
+Incident Viewport約226B、Flow Segment Data約444B -> 0.2~0.5KB/件。
+HEREは固定payloadサイズ非公表。
+https://docs.tomtom.com/traffic-api/documentation/tomtom-maps/traffic-incidents/incident-viewport
+https://docs.tomtom.com/traffic-api/documentation/tomtom-maps/traffic-flow/flow-segment-data","HERE: predictive traffic updated every minute / incidents every two minutes。
+https://www.here.com/platform/traffic-solutions/real-time-traffic-information
+TomTom Traffic Model ID: updated every minute, valid for two minutes。
+https://api.tomtom.com/maps-sdk-js/4.18.2/documentation/classes/TrafficModelId.html","公開採用事例としてTomTom-Toyota Europe連携あり（参考）。
+https://www.automotiveworld.com/news-releases/tomtom-strengthens-european-cooperation-toyota/"
+災害情報,気象警報・注意報・地震情報・津波警報・大雨特別警報等,"気象庁 防災情報XML（PULL型）
+https://xml.kishou.go.jp/xmlpull.html",HTTP GET（Atomフィード -> 個別XML）,高頻度フィード 1分 / 長期フィード 1時間,50~200,KB,1,1,1,"全国一括配信。全Step共通で1配信単位。
+https://xml.kishou.go.jp/xmlpull.html","気象庁は固定ファイルサイズを公表していないため、50~200KBはXML電文1件の実務上の目安レンジ。公開根拠としては固定値ではなくPULL配信仕様のみ。
+https://xml.kishou.go.jp/xmlpull.html","高頻度フィードは毎分更新、長期フィードは毎時更新。1日10GB以上ダウンロードで遮断。
+https://xml.kishou.go.jp/xmlpull.html","日本国内の公的ソースとしては気象庁XMLが一次情報。
+https://xml.kishou.go.jp/xmlpull.html"
+交通規制情報,通行止め・工事規制・事故規制等,"JARTICオープンデータ（月次）
+https://www.jartic.or.jp/service/opendata/
+HERE Incidents
+https://www.here.com/platform/traffic-solutions/real-time-traffic-information",JARTIC: CSV月次取得 / HERE: REST API,JARTIC 月次 / HERE Incidents 2分,0.2~0.3,KB,"12,004","12,004","1,285,403.6","JARTICオープンデータはリアルタイム規制件数を公開していないため、Stepは道路延長proxyで定義。
+Step1=東京23区 12,004km
+Step2=東京23区 12,004km
+Step3=全国 1,285,403.6km
+https://www.kensetsu.metro.tokyo.lg.jp/road/kanri
+https://www.mlit.go.jp/road/soudan/soudan_10b_01.html","TomTom/HERE incident系の1件あたりサイズは公式JSON例の文字列長から0.2~0.3KB/件で近似。JARTIC月次CSVは固定件数でなく月次更新のため別管理。
+https://docs.tomtom.com/traffic-api/documentation/tomtom-maps/traffic-incidents/incident-viewport
+https://www.here.com/platform/traffic-solutions/real-time-traffic-information","JARTICオープンデータは毎月月初更新。JARTIC本体サービスの「24時間（5分更新）」は別サービス。HERE incidentsは2分更新。
+https://www.jartic.or.jp/service/opendata/
+https://www.jartic.or.jp/top.html
+https://www.here.com/platform/traffic-solutions/real-time-traffic-information","JARTIC月次オープンデータと法人向けリアルタイム配信は分けて扱う必要あり。
+https://www.jartic.or.jp/service/opendata/
+https://www.jartic.or.jp/s/service/forcorporation/forcorporation01/"
+気象情報,降水量・風速・視程・気温等,"地域気象観測報（アメダス）
+https://www.jmbsc.or.jp/jp/online/file/f-online33100.html
+https://www.data.jma.go.jp/suishin/shiyou/pdf/no13301",ファイル配信（全国1ファイル、BUFR）,10分,"1,785,600",B,"約1,300","約1,300","約1,300","全Step共通。アメダスは全国約1,300地点。
+https://www.jma.go.jp/jma/kishou/know/amedas/kaisetsu.html
+https://www.data.jma.go.jp/suishin/cgi-bin/catalogue/make_product_page.cgi?id=Amedas","配信資料No.13301は全国1ファイル配信を示すが、固定ファイルサイズは未公表。1,785,600Bは従前シート値を維持しつつ「全国1ファイル」の実務想定値として扱う。厳密な根拠は要サンプル取得確認。
+https://www.data.jma.go.jp/suishin/shiyou/pdf/no13301
+https://www.jmbsc.or.jp/jp/online/file/f-online33100.html","毎時6回、10分毎。
+https://www.jmbsc.or.jp/jp/online/file/f-online33100.html
+https://www.data.jma.go.jp/suishin/shiyou/pdf/no13301","気象庁/JMBSC配信資料が一次ソース。
+https://www.jmbsc.or.jp/jp/online/file/f-online33100.html"
+イベント情報,大規模イベント,"PredictHQ Events API
+https://docs.predicthq.com/api/events/search-events",REST API（country=JP / within / place.scope）,日次（運用取得）,0.5~1,KB,20~80,20~80,200~800,"Step1/2=東京都公式イベントカレンダー掲載件数を東京23区proxyとして採用。
+Step3=全国はPredictHQのcountry=JP / place.scopeで取得可能だが、公開一次情報だけでは件数を固定できないため、東京proxyの10倍レンジで管理。
+https://www.futari-story.metro.tokyo.lg.jp/calendar/
+https://docs.predicthq.com/api/events/search-events
+https://docs.predicthq.com/getting-started/guides/geolocation-guides/searching-by-location/find-events-by-place-id","PredictHQは1イベントあたり固定payloadサイズ非公表。0.5~1KB/件はevents APIの基本フィールド取得前提の近似。
+https://docs.predicthq.com/api/events/search-events","PredictHQは固定更新周期を公開していないため、運用取得頻度として日次を置く。
+https://docs.predicthq.com/api/events/search-events","Uber等の採用事例は参考情報として扱うに留める。
+https://www.predicthq.com/events/ride-sharing-apps"
+地理情報（HDマップ）,高精度3D地図データ,"HERE HD Live Map
+https://www.here.com/jp/about/press-releases/mercedes-benz-deploys-here-hd-live-map-drive-pilot-system
+Dynamic Map Platform (DMP)
+https://www.dynamic-maps.co.jp/en/news/high-precision-3d-map-data-implemented-in-honda-sensing-360-installed-in-the-latest-honda-accord-trim-level/
+NDS.Live
+https://nds-association.org/",契約仕様依存（差分更新 / タイル更新）,日次（差分更新想定）,0.5~1,MB,"12,004","12,004","1,285,403.6","Stepは更新対象道路延長kmで定義。
+Step1=東京23区道路延長 12,004km
+Step2=東京23区道路延長 12,004km
+Step3=全国道路総延長 1,285,403.6km
+https://www.kensetsu.metro.tokyo.lg.jp/road/kanri
+https://www.mlit.go.jp/road/soudan/soudan_10b_01.html","1km当たりのHDマップ配信サイズは公開一次情報で固定値なし。0.5~1MB/kmは差分配信の実務レンジとして置く proxy であり、厳密にはベンダー仕様確認が必要。
+NDS.Live は changed data only の考え方を示す。
+https://nds-association.org/
+https://nds-association.org/nds-delta-updates-of-map-tile-service/","NDS.Liveは差分更新・タイル更新の考え方を示すが、日次は運用想定。
+https://nds-association.org/
+https://nds-association.org/nds-delta-updates-of-map-tile-service/","公開採用事例: Mercedes-Benz x HERE HD Live Map、Honda x DMP。
+https://www.here.com/jp/about/press-releases/mercedes-benz-deploys-here-hd-live-map-drive-pilot-system
+https://www.dynamic-maps.co.jp/en/news/high-precision-3d-map-data-implemented-in-honda-sensing-360-installed-in-the-latest-honda-accord-trim-level/"
+決済情報,決済結果,"Stripe PaymentIntent API
+https://docs.stripe.com/api/payment_intents/object
+https://docs.stripe.com/api/payment_intents/retrieve",REST API / Webhook,イベント駆動,2~5,KB,"1,385~1,470","27,700~29,400","51,900~88,200","Step1=50台 × 東京実績27.7~29.4回/日車 = 1,385~1,470
+Step2=1,000台 × 東京実績27.7~29.4回/日車 = 27,700~29,400
+Step3=3,000台 × 全国展開proxy 17.3~29.4回/日車 = 51,900~88,200
+東京実績: https://www.mlit.go.jp/report/press/jidosha03_hh_000267.html
+地方proxy: https://wwwtb.mlit.go.jp/kyushu/content/000264097.pdf","Stripeは固定payloadサイズを公開していない。2~5KBはPaymentIntent retrieveの公式レスポンス例を基にした近似レンジ。
+https://docs.stripe.com/api/payment_intents/retrieve
+https://docs.stripe.com/api/payment_intents/object","PaymentIntentは定周期更新ではなくイベント駆動。Webhook受信ベースが原則。
+https://docs.stripe.com/api/payment_intents/object
+https://docs.stripe.com/api/payment_intents/retrieve","車両数の全国母数は国交省「ハイヤー・タクシーの車両数及び輸送人員」。
+https://www.mlit.go.jp/jidosha/content/001894856.pdf"
